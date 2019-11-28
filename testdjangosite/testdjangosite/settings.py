@@ -21,7 +21,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'u^qmx)x(mg99fbq(nn)n*(+p*1oicxoo+r^!v8-3&562l(sj_y'
-EASY_MAPS_GOOGLE_KEY = 'AIzaSyAlCe_FsD87R5TZdeQ-odmv_JIjmUpZNi0'
 EASY_MAPS_ZOOM = 16
 EASY_MAPS_LANGUAGE = 'ru'
 EASY_MAPS_CENTER = (-41.3, 32)
@@ -42,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'testdjangoapp',
-    'easy_maps',
 ]
 
 MIDDLEWARE = [

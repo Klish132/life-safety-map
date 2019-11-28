@@ -1,9 +1,121 @@
-{% load easy_maps_tags %}
+<!DOCTYPE html>
 <html>
-  <head></head>
-  <body>
-    {% with 640 as w and 480 as h and "easy_maps/map.html" as t  %}
-      {% easy_map "Ekaterinburg, Mira 33" w h using t %}
-    {% endwith %}
-  </body>
+    <head>
+		<meta charset='utf-8' />
+        <title>Maps Project URFU</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+        <style>
+			body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+			
+			.mapboxgl-marker {
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				border:1px solid gray;
+				background-color:lightblue;
+			}
+			
+			.mapboxgl-popup {
+				max-width: 200px;
+			}
+
+			.mapboxgl-popup-content {
+				text-align: center;
+				font-family: 'Open Sans', sans-serif;
+			}
+
+
+        </style>
+    </head>
+    <body>
+        <div id='map' style='width: 1000px; height: 1000px;'></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1Ijoia2xpc2gxMzIiLCJhIjoiY2szNXpqamtyMGc4czNucG5ncmE2YXprNSJ9.jDWcehUdhz1gNu8bbgLzfQ';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v10',
+                center: [60.60, 56.83],
+                zoom: 12
+            });
+			
+			function readLines(file){
+
+				var reader = new FileReader();
+				reader.onload = function(progressEvent){
+					// Entire file
+					console.log(this.result);
+
+				// By lines
+					var lines = this.result.split('\n');
+					for(var line = 0; line < lines.length; line++){
+						console.log(lines[line]);
+					}
+					return lines;
+				};
+				reader.readAsText(file);
+			};
+			
+			function readFiles(){
+				console.log("ass");
+				var pointList = [];
+				const testFolder = './points/';
+				const fs = require('fs');
+
+				fs.readdir(testFolder, (err, files) => {
+					files.forEach(file => {
+						pointList.push(readLines(file))
+					});
+				});
+			}
+			
+			readFiles();
+
+            var geojson = {
+                type: 'FeatureCollection',
+                features: [{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                           coordinates: [60.60, 56.83]
+                    },
+                    properties: {
+                        title: 'Mapbox',
+                        description: 'Ekaterinburg.'
+                    }
+				}]
+			};
+
+			geojson.features.forEach(function(marker) {
+
+					// create a HTML element for each feature
+					var el = document.createElement('div');
+					el.className = 'marker';
+					el.style.backgroundImage = 'url(https://placekitten.com/g/50/)';              
+					el.style.width = '50px';
+					el.style.height = '50px';
+					el.style.borderRadius = '50%';
+
+					// make a marker for each feature and add to the map
+					new mapboxgl.Marker(el)
+					.setLngLat(marker.geometry.coordinates)
+					.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+						.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+					.addTo(map);
+				});
+		
+        </script>
+    </body>
 </html>
