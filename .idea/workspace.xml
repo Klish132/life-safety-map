@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cb310af3-f5fe-40e6-8f38-834d67e5913d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/djangotest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/djangotest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testdjangosite/testdjangoapp/templates/page1.html" beforeDir="false" afterPath="$PROJECT_DIR$/testdjangosite/testdjangoapp/templates/page1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testdjangosite/testdjangoapp/templates/points/point_1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/testdjangosite/testdjangoapp/templates/points/point_1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testdjangosite/testdjangoapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/testdjangosite/testdjangoapp/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testdjangosite/testdjangosite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/testdjangosite/testdjangosite/settings.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,8 +26,14 @@
   </component>
   <component name="ProjectId" id="1SvIWU9NPtUQ9E3Umd8x1zyscGD" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/django-easy-maps-develop" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -34,18 +41,6 @@
       <recent name="C:\Users\Tuha9\PycharmProjects\djangotest\testdjangosite\testdjangoapp\templates" />
       <recent name="C:\Users\Tuha9\PycharmProjects\djangotest\testdjangosite\testdjangoapp" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -55,7 +50,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Tuha9\PycharmProjects\djangotest\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="C:\Users\Tuha9\PycharmProjects\test\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -69,6 +64,18 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -95,5 +102,27 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575796030829">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1575796030829" />
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1575795928980">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1575795928980" />
+    <state x="461" y="161" key="SettingsEditor" timestamp="1575994185649">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="161" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1575994185649" />
+    <state x="656" y="342" key="com.intellij.ide.util.TipDialog" timestamp="1575986890430">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="656" y="342" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1575986890430" />
+    <state x="616" y="177" width="672" height="676" key="search.everywhere.popup" timestamp="1575796774433">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="177" width="672" height="676" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1575796774433" />
   </component>
 </project>

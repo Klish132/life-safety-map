@@ -1,3 +1,3 @@
-60.60, 56.83
-Mapbox
-Ekaterinburg.
+60.60:56.83:Ekaterinburg:Home city.:No data.:unlocked
+60.616097574371935:56.840433005001046:URFU:Matmex.:No data.:unlocked
+60.59552442736626:56.83703162400255:Passage:Supermarket.:No data.:unlocked

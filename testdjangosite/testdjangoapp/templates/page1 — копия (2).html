@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset='utf-8' />
+        <title>Maps Project URFU</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+        <style>
+			body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+			
+			.mapboxgl-marker {
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				border:1px solid gray;
+				background-color:lightblue;
+			}
+			
+			.mapboxgl-popup {
+				max-width: 200px;
+			}
+
+			.mapboxgl-popup-content {
+				text-align: center;
+				font-family: 'Open Sans', sans-serif;
+			}
+
+
+        </style>
+    </head>
+    <body>
+        <div id='map' style='width: 1000px; height: 1000px;'></div>
+        <script>
+
+            var liststr = {{ liststr|safe }};
+			var features = [];
+			liststr.forEach(function (item, index) {
+				var res = item.split(":");
+				//features.push(res[1])
+				feature = {"type": "Feature", "properties": { "title": res[2], "icon": "music", "description": res[3]}, "geometry": {"type": "Point", "coordinates": [res[0], res[1]]}};
+				features.push(feature)
+				console.log(res);
+			});
+			console.log(features);
+			
+            mapboxgl.accessToken = 'pk.eyJ1Ijoia2xpc2gxMzIiLCJhIjoiY2szNXpqamtyMGc4czNucG5ncmE2YXprNSJ9.jDWcehUdhz1gNu8bbgLzfQ';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v10',
+                center: [60.60, 56.83],
+                zoom: 12
+            });
+
+            map.on('load', function () {
+				map.addLayer({
+					"id": "places",
+					"type": "symbol",
+					"source": {
+						"type": "geojson",
+						"data": {
+							"type": "FeatureCollection",
+							"features": features
+					}
+				},
+				"layout": {
+					"icon-image": "{icon}-15",
+					"icon-size": 2,
+					"icon-allow-overlap": true
+				}
+				});
+				 
+
+				map.on('click', 'places', function (e) {
+					var coordinates = e.features[0].geometry.coordinates.slice();
+					var description = e.features[0].properties.description;
+					var title = e.features[0].properties.title;
+				 
+
+					while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+						coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+					}
+				 
+					new mapboxgl.Popup({ offset: 15 })
+						.setLngLat(coordinates)
+						.setHTML('<h3>' + title + '</h3><p>' + description + '</p>')
+						.addTo(map);
+				});
+				
+				map.on('click', addMarker);
+
+				function addMarker(e){
+					var popup = new mapboxgl.Popup().setText("New marker.");
+					var el = document.createElement('div');
+					el.id = 'marker';
+
+
+					new mapboxgl.Marker(el)
+						.setLngLat(e.lngLat)
+						.setPopup(popup)
+						.addTo(map);
+				}
+				 
+				map.on('mouseenter', 'places', function () {
+					map.getCanvas().style.cursor = 'pointer';
+				});
+				 
+				map.on('mouseleave', 'places', function () {
+					map.getCanvas().style.cursor = '';
+				});
+			});
+		
+        </script>
+    </body>
+</html>

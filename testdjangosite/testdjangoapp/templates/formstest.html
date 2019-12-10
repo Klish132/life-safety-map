@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset='utf-8' />
+        <title>Maps Project URFU</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.5.0/mapbox-gl.css' rel='stylesheet' />
+        <style>
+			body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+			
+			.mapboxgl-marker {
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				border:1px solid gray;
+				background-color:lightblue;
+			}
+			
+			.mapboxgl-popup {
+				max-width: 200px;
+			}
+
+			.mapboxgl-popup-content {
+				text-align: center;
+				font-family: 'Open Sans', sans-serif;
+			}
+
+        </style>
+    </head>
+    <body>
+        <div id='map' style='width: 1000px; height: 1000px;'></div>
+		<form name="form1">
+			<span id="buttons">
+				<input type="button" onClick="switchRemove() "name="addremove" style="float:right;" value="Remove"/>
+			</span>
+		</form>
+		<form name="form2">
+			<span id="buttons">
+				<input type="button" onClick="switchAdd() "name="addremove" style="float:right;" value="Add"/>
+			</span>
+		</form>
+        <script>
+
+            var liststr = {{ liststr|safe }};
+			
+			var features = [];
+			var markerlist = [];
+			var geojson = {};
+			
+			var removeVariable = false;
+			var addVariable = false;
+			
+			liststr.forEach(function (item, index) {
+				splitAndPush(item);
+			});
+			
+			function splitAndPush(e){
+				var res = e.split(":");
+				feature = {"type": "Feature", "properties": { "title": res[2], "icon": "music", "description": res[3]}, "geometry": {"type": "Point", "coordinates": [res[0], res[1]]}};
+				features.push(feature);
+			}
+			
+			function switchRemove() {
+				removeVariable ^= true;
+			};
+			
+			function switchAdd() {
+				addVariable ^= true;
+			};
+			
+            mapboxgl.accessToken = 'pk.eyJ1Ijoia2xpc2gxMzIiLCJhIjoiY2szNXpqamtyMGc4czNucG5ncmE2YXprNSJ9.jDWcehUdhz1gNu8bbgLzfQ';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v10',
+                center: [60.60, 56.83],
+                zoom: 12
+            });
+
+            
+			
+			map.on('click', addMarker);
+			function addMarker(e){
+				if (removeVariable == false && addVariable == true) {
+					var parameters = e.lngLat.toArray();
+					parameters.push("New marker", "No description.");
+					markerlist.forEach(function(marker) {
+						marker.remove();
+					});
+					splitAndPush(parameters.join(":"));
+					switchAdd();
+					updateGeojson();
+				};
+			}
+			
+			updateGeojson();
+			
+			function updateGeojson() {
+				
+				geojson = {
+					type: 'FeatureCollection',
+					features: features
+				};
+			
+				geojson.features.forEach(function(marker) {
+
+					var el = document.createElement('div');
+					el.className = 'marker';
+					el.style.backgroundImage = 'url(https://placekitten.com/g/50/)';              
+					el.style.width = '50px';
+					el.style.height = '50px';
+					el.style.borderRadius = '50%';
+					
+					var mr = new mapboxgl.Marker(el)
+					.setLngLat(marker.geometry.coordinates)
+					.setPopup(new mapboxgl.Popup({ offset: 25 })
+						.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+					.addTo(map);
+					el.addEventListener('click', function() {
+						if (removeVariable == true && addVariable == false) {
+							mr.remove();
+							features.forEach(function(feature) {
+								if (feature.geometry.coordinates == marker.geometry.coordinates) {
+									console.log(feature.geometry.coordinates);
+									console.log(marker.geometry.coordinates);
+									console.log(feature);
+									features.splice(features.indexOf(feature), 1);
+								};
+							});
+							switchRemove();
+						};
+					});
+					markerlist.push(mr);
+					
+				});
+			};
+		
+        </script>
+    </body>
+</html>

@@ -37,12 +37,107 @@
 				font-family: 'Open Sans', sans-serif;
 			}
 
-
         </style>
     </head>
     <body>
         <div id='map' style='width: 1000px; height: 1000px;'></div>
+		<form name="form1">
+			<span id="buttons">
+				<input type="button" onClick="switchRemove() "name="addremove" style="float:right;" value="Remove"/>
+			</span>
+		</form>
+		<form name="form2">
+			<span id="buttons">
+				<input type="button" onClick="switchAdd() "name="addremove" style="float:right;" value="Add"/>
+			</span>
+		</form>
+		<a href="" id="a" style="float:right;">Save map</a>
+		<input type="button" onClick="saveToText() "name="savemap" style="float:right;" value="Create map"/>
         <script>
+
+            var liststr = {{ liststr|safe }};
+			
+			var features = [];
+			var markerlist = [];
+			var popuplist = [];
+			var geojson = {};
+			
+			var removeVariable = false;
+			var addVariable = false;
+			var markerId = 0;
+			
+			liststr.forEach(function (item, index) {
+				splitAndPush(item);
+			});
+			
+			function splitAndPush(e){
+				var res = e.split(":");
+				feature = {"type": "Feature", "properties": { "title": res[2], "icon": "music", "description": res[3], "noisedata": res[4], "locked": res[5].slice(0, -1)}, "geometry": {"type": "Point", "coordinates": [res[0], res[1]]}};
+				features.push(feature);
+			}
+			
+			function switchRemove() {
+				removeVariable ^= true;
+			};
+			
+			function switchAdd() {
+				addVariable ^= true;
+			};
+			
+			function saveMarkers(id, coordstr) {
+				var title = document.getElementById("title" + id).value;
+				var desc = document.getElementById("description" + id).value;
+				var noisedata = document.getElementById("noisedata" + id).value;
+				var coords = coordstr.split(",");
+				features.forEach(function(feature) {
+					//console.log(coords);
+					//console.log(feature.geometry.coordinates);
+					if (feature.geometry.coordinates[0] == coords[0] &&
+						feature.geometry.coordinates[1] == coords[1]) {
+						feature.properties.title = title;
+						feature.properties.description = desc;
+						feature.properties.noisedata = noisedata;
+					};
+				});
+				updateGeojson();
+			};
+			
+			function lockMarker(id, coordstr) {
+				var coords = coordstr.split(",");
+				features.forEach(function(feature) {
+					//console.log(feature.geometry.coordinates);
+					if (feature.geometry.coordinates[0] == coords[0] &&
+						feature.geometry.coordinates[1] == coords[1]) {
+						if (feature.properties.locked == "locked") {
+							feature.properties.locked = "unlocked";
+						} else {
+							feature.properties.locked = "locked";
+						};
+					};
+				});
+				popuplist.forEach(function(pop) {
+						pop.remove();
+					});
+				updateGeojson();
+			};
+			
+			function saveToText() {
+				var resultarr = [];
+				features.forEach(function(feature) {
+					var arr = feature.geometry.coordinates.concat(feature.properties.title, feature.properties.description, feature.properties.noisedata, feature.properties.locked);
+					var arrstr = arr.join(":");
+					if (arrstr.endsWith("\n") != true) {
+						arrstr = arrstr + "\n";
+					};
+					console.log(arrstr);
+					resultarr.push(arrstr);
+				});
+				var savemap = document.getElementById("a");
+				var file = new Blob(resultarr, {type: 'text/plain'});
+				savemap.href = URL.createObjectURL(file);
+				savemap.download = "point_1";
+			};
+			
             mapboxgl.accessToken = 'pk.eyJ1Ijoia2xpc2gxMzIiLCJhIjoiY2szNXpqamtyMGc4czNucG5ncmE2YXprNSJ9.jDWcehUdhz1gNu8bbgLzfQ';
             var map = new mapboxgl.Map({
                 container: 'map',
@@ -50,71 +145,84 @@
                 center: [60.60, 56.83],
                 zoom: 12
             });
+
+            
 			
-			function readLines(file){
-
-				var reader = new FileReader();
-				reader.onload = function(progressEvent){
-					// Entire file
-					console.log(this.result);
-
-				// By lines
-					var lines = this.result.split('\n');
-					for(var line = 0; line < lines.length; line++){
-						console.log(lines[line]);
-					}
-					return lines;
-				};
-				reader.readAsText(file);
-			};
-			
-			function readFiles(){
-				console.log("ass");
-				var pointList = [];
-				const testFolder = './points/';
-				const fs = require('fs');
-
-				fs.readdir(testFolder, (err, files) => {
-					files.forEach(file => {
-						pointList.push(readLines(file))
+			map.on('click', addMarker);
+			function addMarker(e){
+				if (removeVariable == false && addVariable == true) {
+					var parameters = e.lngLat.toArray();
+					parameters.push("New marker", "No description.", "No data.", "unlocked");
+					markerlist.forEach(function(marker) {
+						marker.remove();
 					});
-				});
+					splitAndPush(parameters.join(":"));
+					switchAdd();
+					updateGeojson();
+				};
 			}
 			
-			readFiles();
-
-            var geojson = {
-                type: 'FeatureCollection',
-                features: [{
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                           coordinates: [60.60, 56.83]
-                    },
-                    properties: {
-                        title: 'Mapbox',
-                        description: 'Ekaterinburg.'
-                    }
-				}]
-			};
-
-			geojson.features.forEach(function(marker) {
-
-					// create a HTML element for each feature
+			updateGeojson();
+			
+			function updateGeojson() {
+				
+				geojson = {
+					type: 'FeatureCollection',
+					features: features
+				};
+			
+				geojson.features.forEach(function(marker) {
+					
+					var image = 'url(https://sun9-37.userapi.com/c850608/v850608269/540f6/6Zy4EjTtQ7s.jpg)';
+					if  (marker.properties.locked == "locked") {
+						image = 'url(https://sun9-38.userapi.com/c850608/v850608269/540fd/WF6UJpAjDtY.jpg)';
+					};
 					var el = document.createElement('div');
 					el.className = 'marker';
-					el.style.backgroundImage = 'url(https://placekitten.com/g/50/)';              
+					el.style.backgroundImage = image;              
 					el.style.width = '50px';
 					el.style.height = '50px';
 					el.style.borderRadius = '50%';
-
-					// make a marker for each feature and add to the map
-					new mapboxgl.Marker(el)
+					
+					var title = marker.properties.title;
+					var desc = marker.properties.description;
+					var noisedata = marker.properties.noisedata;
+					var coords = marker.geometry.coordinates;
+					var lock = "";
+					if  (marker.properties.locked == "locked") {
+						lock = "readonly";
+					};
+					
+					var popuphtml = '<h3>' + "Title:" + '</h3>' +
+									'<input type="text" id="title' + markerId + '" value="' + title + '">' +
+									'<h3>' + "Description:" + '</h3>' +
+									'<input type="text" id="description' + markerId + '" value="' + desc + '">' +
+									'<h3>' + "Noise data:" + '</h3>' +
+									'<input type="text" id="noisedata' + markerId + '" value="' + noisedata + '"' + " " + lock + ' >' +
+									'<input type="submit" value="&#x2714" onClick=lockMarker(' + markerId + ',' + "\"" + coords + "\"" + ')>' +
+									'<input type="submit" value="Save marker" onClick=saveMarkers(' + markerId + ',' + "\"" + coords + "\"" +  ')>';
+					var popup = new mapboxgl.Popup({ offset: 25 })
+						.setHTML(popuphtml);
+					popuplist.push(popup);
+					var mr = new mapboxgl.Marker(el)
 					.setLngLat(marker.geometry.coordinates)
-					.setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-						.setHTML('<h3>' + marker.properties.title + '</h3><p>' + marker.properties.description + '</p>'))
+					.setPopup(popup)
 					.addTo(map);
+					el.addEventListener('click', function() {
+						if (removeVariable == true && addVariable == false) {
+							mr.remove();
+							features.forEach(function(feature) {
+								if (feature.geometry.coordinates == marker.geometry.coordinates) {
+									features.splice(features.indexOf(feature), 1);
+								};
+							});
+							switchRemove();
+						};
+					});
+					markerlist.push(mr);
+					
 				});
+			};
 		
         </script>
     </body>
